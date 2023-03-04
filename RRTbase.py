@@ -194,13 +194,15 @@ class RRTGraph:
         x,y = self.sample_envir()
 
         self.add_node(x,y,None)
+        self.findParent(Node.instances[-1])
+        self.trim(Node.instances[-1])
         node = Node.instances[-1]
-        self.findParent(node)
         parent = node.p
         p1 = li.Point(node.x,node.y)
         p2 = li.Point(parent.x,parent.y)
         
         collidedEdges = []
+        
         for obs in Obstacle.instances:
             for edge in obs.edges:
                 p3 = li.Point(edge[0][0],edge[0][1])
@@ -217,8 +219,6 @@ class RRTGraph:
                 dist = np.linalg.norm(np.cross(E2-E1, E1-E3))/np.linalg.norm(E2-E1)
                 distances.append(dist)
             minDistance = min(distances)
-            minDistance = min(minDistance,35)
-            
             self.trim(Node.instances[-1],minDistance)
         
         else:
